@@ -16,7 +16,7 @@ import os
 import json
 
 !mkdir .kaggle
-token={"username":"tusharshandilya","key":"2f5d6262ece0995e2cbbc7887115e4df"}
+token={"username":"tush_______","key":"2_____________"}
 with open("/content/.kaggle/kaggle.json", "w") as file:
     json.dump(token, file)
 
