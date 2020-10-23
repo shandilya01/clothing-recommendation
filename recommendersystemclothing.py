@@ -15,32 +15,6 @@ from sklearn.preprocessing import StandardScaler
 import os
 import json
 
-!mkdir .kaggle
-token={"username":"tush_______","key":"2_____________"}
-with open("/content/.kaggle/kaggle.json", "w") as file:
-    json.dump(token, file)
-
-!cp /content/.kaggle/kaggle.json ~/.kaggle/kaggle.json
-!kaggle config set -n path -v{/content}
-
-!chmod 600 /root/.kaggle/kaggle.json
-
-!kaggle datasets list
-
-!kaggle datasets list -s fashion
-
-!kaggle datasets download -d paramaggarwal/fashion-product-images-small
-
-!ls
-
-os.chdir('/content/{/content}/datasets/paramaggarwal/fashion-product-images-small')
-
-DATASET_PATH='/content/{/content}/datasets/paramaggarwal/fashion-product-images-small'
-
-!unzip fashion-product-images-small.zip
-
-!ls
-
 df = pd.read_csv("styles.csv", nrows=5000, error_bad_lines=False)
 df['image'] = df.apply(lambda row: str(row['id']) + ".jpg", axis=1)
 df.head(10)
@@ -99,9 +73,6 @@ def get_embedding(model, img_name):
   return model.predict(x).reshape(-1)
 
 emb=get_embedding(model,df['image'][0]);
-cv2_imshow(cv2.imread(img_path(df.iloc[0].image)))
-print(emb)
-print(emb.shape)
 
 df_emb=df['image'].apply(lambda img :get_embedding(model, img))
 df_emb.head()
@@ -140,22 +111,4 @@ print("Recommended images to you:")
 for i in range(num_rec):
   show_img(df['image'][indexes[i]])
 
-from sklearn.manifold import TSNE
-import time
-import seaborn as sns
-
-time_start = time.time()
-tsne = TSNE(n_components=2, verbose=0, perplexity=40, n_iter=300)
-tsne_results = tsne.fit_transform(df_emb)
-print('t-SNE done! Time elapsed: {} seconds'.format(time.time()-time_start))
-
-df['tsne-2d-one'] = tsne_results[:,0]
-df['tsne-2d-two'] = tsne_results[:,1]
-
-plt.figure(figsize=(16,10))
-sns.scatterplot(x="tsne-2d-one", y="tsne-2d-two",
-                hue="subCategory",
-                data=df,
-                legend="full",
-                alpha=0.8)
 
